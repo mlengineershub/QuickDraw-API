@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Play QuickDraw</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Game Setup</h1>
+        <form id="gameSetup">
+            <input type="text" id="playerName" placeholder="Enter your name" required>
+            <select id="difficulty">
+                <option value="medium">Medium</option>
+                <option value="hard">Hard</option>
+            </select>
+            <select id="rounds">
+                <option value="1">1 Round</option>
+                <option value="2">2 Rounds</option>
+                <option value="3">3 Rounds</option>
+            </select>
+            <button type="submit">Start Game</button>
+        </form>
+    </div>
+
+    <script src="js/game.js"></script>
+</body>
+
+</html>
