@@ -9,6 +9,7 @@
 </head>
 
 <body>
+    <img src="" alt="Game Logo" id="gameLogo" class="animated-entry">
     <div class="container">
         <h1>Game Setup</h1>
         <form id="gameSetup">
@@ -27,6 +28,16 @@
     </div>
 
     <script src="js/game.js"></script>
+    <script>
+        // Set the logo based on URL parameter and animate entry
+        document.addEventListener("DOMContentLoaded", function () {
+            const params = new URLSearchParams(window.location.search);
+            const mode = params.get('mode');
+            const gameLogo = document.getElementById('gameLogo');
+            gameLogo.src = mode === 'time' ? 'images/clock.png' : 'images/robot.png';
+            setTimeout(() => gameLogo.style.left = '20%', 100); // Start animation shortly after page load 
+        });
+    </script>
 </body>
 
 </html>
