@@ -18,7 +18,7 @@ from transformers import pipeline, AutoModelForImageClassification, AutoImagePro
 
 
 # Load environment variables
-ENV_FILE_PATH = os.path.join(os.path.dirname(__file__), "../.env")
+ENV_FILE_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), ".env")
 load_dotenv(dotenv_path=ENV_FILE_PATH)
 
 model_ckpt = os.getenv("MODEL_CKPT")
