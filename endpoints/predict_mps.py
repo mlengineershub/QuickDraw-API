@@ -1,41 +1,94 @@
-# 1. Import the required libraries
+# Imports for environment variables
+import os
+from dotenv import load_dotenv
+
+# Imports for web API
 from fastapi import FastAPI
 import uvicorn
 
+# Imports for data handling and processing
+import numpy as np
+from PIL import Image
+
+# Imports for type annotations
+from typing import List
+
+# Imports for deep learning and model processing
 import torch
-from transformers import pipeline
-from transformers import AutoModelForImageClassification, AutoImageProcessor
+from transformers import pipeline, AutoModelForImageClassification, AutoImageProcessor
 
 
-# 2. Create the app object
+# Load environment variables
+ENV_FILE_PATH = os.path.join(os.path.dirname(__file__), "../.env")
+load_dotenv(dotenv_path=ENV_FILE_PATH)
+
+model_ckpt = os.getenv("MODEL_CKPT")
+host = os.getenv("HOST")
+port = int(os.getenv("PORT_ENDPOINT"))
+
+
+# Initialize the FastAPI app
 app = FastAPI()
-model_ckpt = "ilyesdjerfaf/vit-base-patch16-224-in21k-quickdraw"
 
 model = AutoModelForImageClassification.from_pretrained(model_ckpt)
 image_processor = AutoImageProcessor.from_pretrained(model_ckpt)
 
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+device = "mps" if torch.backends.mps.is_available() else "cpu"
 pipe = pipeline('image-classification', model=model, image_processor=image_processor, device=device)
 
 
-# 3. Index route, opens automatically on http://
-@app.get("/") # get request
+# Define the endpoints
+@app.get("/") 
 def index():
-    """
-    We have to create a function that will return a key value pair
-    Here we are focusing on the key "message" and the value "Hello, stranger"
-    As soon as we run the server, we will see the message "Hello, stranger" on the browser
-    """
-    return {"message": "Hello, stranger"}
+    return {"message": "Hello, please go to /docs to see the API documentation"}
 
-# 4. Route with a single parameter, returns the parameter within a message
-@app.post("/predict")
-def predict(image: str):
+@app.get("/device")
+def get_device():
+    return {"device": device}
+
+@app.get("/model")
+def get_model():
+    return {"model": model_ckpt}
+
+@app.post("/predict_with_path")
+def predict_with_path(image: str):
     """
     This function will take an image as input and return the prediction
+
+    @params {image: str} the path to the image
     """
+
     prediction = pipe(image)
     print(prediction)
     label = prediction[0]['label']
     score = prediction[0]['score']
+    
     return {"max_prob": score, "pred_label": label}
+
+@app.post("/predict_with_array")
+def predict_with_array(image: List[List[List[int]]]):
+    """
+    This function will take an image as input and return the prediction
+
+    @params {image: List[List[List[int]]} the image as a list of lists of lists
+    """
+
+    image = np.array(image)
+
+    if image.max() <= 1:
+        image = image * 255
+
+    image = Image.fromarray(image.astype('uint8'))
+
+    prediction = pipe(image)
+
+    print(prediction)
+    label = prediction[0]['label']
+    score = prediction[0]['score']
+
+    return {"max_prob": score, "pred_label": label}
+
+
+if __name__ == "__main__":
+    uvicorn.run(app, host=host,
+                port=port)
