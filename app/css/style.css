@@ -1,4 +1,3 @@
-/* Basic Reset */
 body,
 h1,
 p,
@@ -41,7 +40,6 @@ p {
 
 button {
     background-color: #4CAF50;
-    /* Green */
     border: none;
     color: white;
     padding: 15px 32px;
@@ -85,34 +83,66 @@ form button[type="submit"]:hover {
     background-color: #444;
 }
 
-/* Existing styles... */
 .floating {
     position: fixed;
     left: -100%;
-    /* Start off-screen */
     transition: left 0.5s ease-out;
     bottom: 20%;
-    /* Vertical position */
     width: 150px;
-    /* Adjust size as needed */
 }
 
 #logo {
     display: block;
     margin: 0 auto;
     width: 200px;
-    /* Adjust size as needed */
 }
-
-/* Existing styles... */
 
 .animated-entry {
     position: fixed;
     left: -100%;
-    /* Start off-screen */
     transition: left 1s ease-out;
     bottom: 35%;
     width: 250px;
-    /* left: 65%; */
-    /* transform: translate(-50%, -50%); */
+
+}
+
+.game-logo {
+    display: block;
+    margin: 0 auto;
+    width: 100px;
+    height: auto;
+}
+
+.container {
+    text-align: center;
+    width: 100%;
+}
+
+.selection-area {
+    font-size: 24px;
+    margin-top: 20px;
+}
+
+.drawing-area {
+    border: 2px solid #ccc;
+    position: relative;
+    margin: 20px auto;
+    width: 400px;
+    height: 400px;
+}
+
+canvas {
+    width: 100%;
+    height: 100%;
+}
+
+.prediction-area {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.countdown {
+    font-size: 24px;
+    color: red;
+    margin: 10px;
 }

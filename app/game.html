@@ -29,13 +29,12 @@
 
     <script src="js/game.js"></script>
     <script>
-        // Set the logo based on URL parameter and animate entry
         document.addEventListener("DOMContentLoaded", function () {
             const params = new URLSearchParams(window.location.search);
             const mode = params.get('mode');
             const gameLogo = document.getElementById('gameLogo');
             gameLogo.src = mode === 'time' ? 'images/clock.png' : 'images/robot.png';
-            setTimeout(() => gameLogo.style.left = '20%', 100); // Start animation shortly after page load 
+            setTimeout(() => gameLogo.style.left = '20%', 100);
         });
     </script>
 </body>
