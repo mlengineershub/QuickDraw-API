@@ -1,3 +1,5 @@
+const canvas = document.getElementById('drawCanvas');
+
 document.addEventListener("DOMContentLoaded", function () {
     const params = new URLSearchParams(window.location.search);
     const difficulty = params.get('difficulty');
@@ -43,7 +45,6 @@ function selectRandomPrompt() {
 }
 
 function initializeCanvas() {
-    const canvas = document.getElementById('drawCanvas');
     const ctx = canvas.getContext('2d', { willReadFrequently: true });
 
     canvas.width = 400;
@@ -110,7 +111,7 @@ function finishGame() {
     callPredictionAPI();
 }
 
-function extractImageData(canvas) {
+function extractImageData() {
     const ctx = canvas.getContext('2d', { willReadFrequently: true });
     // ctx.drawImage(canvas, 0, 0);
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
@@ -133,8 +134,7 @@ function extractImageData(canvas) {
 }
 
 function callPredictionAPI() {
-    const canvas = document.getElementById('drawCanvas');
-    const imageArray = extractImageData(canvas); // Use the new function to get the image array
+    const imageArray = extractImageData();
     console.log(JSON.stringify(imageArray));
 
     fetch('http://127.0.0.1:8000/predict_with_array', {
