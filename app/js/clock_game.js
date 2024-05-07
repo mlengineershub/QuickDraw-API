@@ -1,14 +1,9 @@
 const canvas = document.getElementById('drawCanvas');
-
-document.addEventListener("DOMContentLoaded", function () {
-    const params = new URLSearchParams(window.location.search);
-    const difficulty = params.get('difficulty');
-    const timeLimit = difficulty === 'hard' ? 20 : 30;
-
-    initializeTimer(timeLimit);
-    initializeCanvas();
-    selectRandomPrompt();
-});
+const ctx = canvas.getContext('2d', { willReadFrequently: true });
+canvas.width = 400;
+canvas.height = 400;
+let painting = false;
+let intervalId = null;
 
 function selectRandomPrompt() {
     const prompts = {
@@ -44,49 +39,6 @@ function selectRandomPrompt() {
     document.getElementById('randomPrompt').innerText = randomPrompt;
 }
 
-function initializeCanvas() {
-    const ctx = canvas.getContext('2d', { willReadFrequently: true });
-
-    canvas.width = 400;
-    canvas.height = 400;
-
-    let painting = false;
-    let intervalId = null;
-
-    function startPosition(e) {
-        painting = true;
-        draw(e);
-        intervalId = setInterval(callPredictionAPI, 1500); // Start calling the API every 1.5 seconds
-    }
-
-    function finishedPosition() {
-        painting = false;
-        ctx.beginPath();
-        clearInterval(intervalId); // Stop calling the API when the user stops drawing
-        callPredictionAPI(); // Call one last time on finish
-    }
-
-    function draw(e) {
-        if (!painting) return;
-        ctx.lineWidth = 5;
-        ctx.lineCap = 'round';
-        ctx.strokeStyle = 'black';
-
-        const rect = canvas.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-
-        ctx.lineTo(x, y);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.moveTo(x, y);
-    }
-
-    canvas.addEventListener('mousedown', startPosition);
-    canvas.addEventListener('mouseup', finishedPosition);
-    canvas.addEventListener('mousemove', draw);
-}
-
 function initializeTimer(duration) {
     let timer = duration, minutes, seconds;
     const countdown = document.getElementById('countdown');
@@ -111,42 +63,92 @@ function finishGame() {
     callPredictionAPI();
 }
 
-function extractImageData() {
-    const ctx = canvas.getContext('2d', { willReadFrequently: true });
-    // ctx.drawImage(canvas, 0, 0);
-    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    const pixels = imageData.data;
-    let finalArray = [];
+document.addEventListener("DOMContentLoaded", function () {
+    const params = new URLSearchParams(window.location.search);
+    const difficulty = params.get('difficulty');
+    const timeLimit = difficulty === 'hard' ? 20 : 30;
 
-    for (let i = 0; i < pixels.length; i += 4) {
-        finalArray.push([pixels[i], pixels[i + 1], pixels[i + 2]]); // RGB
+    initializeTimer(timeLimit);
+    initializeCanvas();
+    selectRandomPrompt();
+});
+
+
+function startPosition(e) {
+    painting = true;
+    draw(e);
+    intervalId = setInterval(callPredictionAPI, 1500); // Start calling the API every 1.5 seconds
+}
+
+function finishedPosition() {
+    painting = false;
+    clearInterval(intervalId); // Stop calling the API when the user stops drawing
+    ctx.beginPath();
+    callPredictionAPI(); // Call one last time on finish
+
+}
+
+function draw(e) {
+    if (!painting) return;
+    ctx.lineWidth = 5;
+    ctx.lineCap = 'round';
+    ctx.strokeStyle = 'black';
+
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    ctx.lineTo(x, y);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+}
+
+function initializeCanvas() {
+    canvas.addEventListener('mousedown', startPosition);
+    canvas.addEventListener('mouseup', finishedPosition);
+    canvas.addEventListener('mousemove', draw);
+}
+
+function dataURItoBlob(dataURI) {
+    // Decode the dataURL
+    const byteString = atob(dataURI.split(',')[1]);
+
+    // Get the mime type from the dataURL
+    const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+
+    // Construct a byte array
+    const ia = new Uint8Array(byteString.length);
+    for (let i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
     }
 
-    let imageArray = [];
-    for (let row = 0; row < canvas.height; row++) {
-        let rowArray = [];
-        for (let col = 0; col < canvas.width; col++) {
-            rowArray.push(finalArray[row * canvas.width + col]);
-        }
-        imageArray.push(rowArray);
-    }
-    return imageArray;
+    // Create and return a blob from the byte array
+    return new Blob([ia], { type: mimeString });
+}
+
+function extractImage() {
+    /*
+    This function extracts the image from the canvas, converts it to a Blob, 
+    and returns the Blob for uploading.
+    */
+    const image = canvas.toDataURL('image/png');
+    const imageBlob = dataURItoBlob(image);
+    return imageBlob;
 }
 
 function callPredictionAPI() {
-    const imageArray = extractImageData();
-    console.log(JSON.stringify(imageArray));
+    const imageBlob = extractImage(); // Get the Blob from the canvas
+    const formData = new FormData();
+    formData.append('file', imageBlob);
 
-    fetch('http://127.0.0.1:8000/predict_with_array', {
+    fetch('http://127.0.0.1:8000/predict_with_file', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(imageArray)
+        body: formData
     })
         .then(response => response.json())
         .then(data => {
-            document.getElementById('predictionText').innerText = `Prediction: ${data.pred_label} with ${data.max_prob*100}% confidence`;
+            document.getElementById('predictionText').innerText = `Prediction: ${data.pred_label} with ${data.max_prob * 100}% confidence`;
         })
         .catch(error => {
             console.error('Error:', error);

@@ -1,9 +1,10 @@
 # Imports for environment variables
+from io import BytesIO
 import os
 from dotenv import load_dotenv
 
 # Imports for web API
-from fastapi import FastAPI
+from fastapi import FastAPI, File, UploadFile
 import uvicorn
 
 # Imports for data handling and processing
@@ -64,7 +65,7 @@ def predict_with_path(image: str):
     
     return {"max_prob": score, "pred_label": label}
 
-@app.post("/predict_with_array")
+@app.post("/predict_with_file")
 def predict_with_array(image: List[List[List[int]]]):
     """
     This function will take an image as input and return the prediction
@@ -85,6 +86,28 @@ def predict_with_array(image: List[List[List[int]]]):
     label = prediction[0]['label']
     score = prediction[0]['score']
 
+    return {"max_prob": score, "pred_label": label}
+
+@app.post("/predict_with_file")
+async def predict_with_file(file: UploadFile = File(...)):
+    # Read the image file and convert it into a PIL Image
+    image_contents = await file.read()
+    image = Image.open(BytesIO(image_contents))
+    
+    # Convert the PIL Image into a numpy array
+    image_array = np.array(image)
+    
+    if image_array.shape[2] > 1:
+        # Convert to grayscale by averaging channels
+        image_array = np.mean(image_array, axis=2)
+    
+    # Scale the values if they are between 0 and 1
+    if image_array.max() <= 1:
+        image_array *= 255
+
+    prediction = pipe(Image.fromarray(image_array.astype('uint8')))
+    label = prediction[0]['label']
+    score = prediction[0]['score']
     return {"max_prob": score, "pred_label": label}
 
 
