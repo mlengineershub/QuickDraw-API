@@ -146,3 +146,8 @@ canvas {
     color: red;
     margin: 10px;
 }
+
+#results p {
+    font-size: 18px;
+    color: #666;
+}

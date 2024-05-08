@@ -4,46 +4,54 @@ canvas.width = 400;
 canvas.height = 400;
 let painting = false;
 let intervalId = null;
+let timerInterval = null; // Global timer interval
 let currentRound = 1;
 let totalRounds = parseInt(new URLSearchParams(window.location.search).get('totalRounds'));
 let scores = new Array(totalRounds).fill(0); // Initialize scores array
 let X = null;
 const timeLimit = new URLSearchParams(window.location.search).get('difficulty') === 'hard' ? 20 : 30;
+let mean_time_player = 0;
+let score_player = 0;
+let start_time = 0;
 
+const prompts = {
+    "airplane": "✈️", "banana": "🍌", "computer": "💻", "dog": "🐶", "elephant": "🐘",
+    "fish": "🐟", "garden": "🌼", "helmet": "⛑️", "ice cream": "🍦", "jail": "🏛️",
+    "key": "🔑", "lantern": "🏮", "motorbike": "🏍️", "necklace": "📿", "onion": "🧅",
+    "penguin": "🐧", "raccoon": "🦝", "sandwich": "🥪", "table": "🪑", "underwear": "🩲",
+    "vase": "🏺", "watermelon": "🍉", "yoga": "🧘", "zigzag": "〰️"
+};
 
 function selectRandomPrompt() {
-    const prompts = {
-        "airplane": "✈️", "banana": "🍌", "computer": "💻", "dog": "🐶", "elephant": "🐘",
-        "fish": "🐟", "garden": "🌼", "helmet": "⛑️", "ice cream": "🍦", "jail": "🏛️",
-        "key": "🔑", "lantern": "🏮", "motorbike": "🏍️", "necklace": "📿", "onion": "🧅",
-        "penguin": "🐧", "raccoon": "🦝", "sandwich": "🥪", "table": "🪑", "underwear": "🩲",
-        "vase": "🏺", "watermelon": "🍉", "yoga": "🧘", "zigzag": "〰️"
-    };
     const promptKeys = Object.keys(prompts);
     const randomKey = promptKeys[Math.floor(Math.random() * promptKeys.length)];
     const randomPrompt = `${prompts[randomKey]} ${randomKey.charAt(0).toUpperCase() + randomKey.slice(1)}`;
-    X = randomKey;
+    X = prompts[randomKey];
     document.getElementById('randomPrompt').innerText = randomPrompt;
 }
 
 function initializeTimer(duration) {
+    clearInterval(timerInterval); // Clear existing timer
     let timer = duration, minutes, seconds;
+    start_time = new Date().getTime();
     const countdown = document.getElementById('countdown');
-    const interval = setInterval(function () {
+    timerInterval = setInterval(function () {
         minutes = parseInt(timer / 60, 10);
         seconds = parseInt(timer % 60, 10);
         minutes = minutes < 10 ? "0" + minutes : minutes;
         seconds = seconds < 10 ? "0" + seconds : seconds;
         countdown.textContent = minutes + ":" + seconds;
         if (--timer < 0) {
-            clearInterval(interval);
+            clearInterval(timerInterval);
             finishRound();
         }
     }, 1000);
 }
 
 function finishRound() {
-    // get the final prediction before updating the score
+    const end_time = new Date().getTime();
+    const time_diff = end_time - start_time;
+    mean_time_player = mean_time_player + time_diff;
     callPredictionAPI();
     const scoreForRound = document.getElementById('predictionText').innerText.includes(X) ? 1 : 0;
     updateScore(scoreForRound);
@@ -52,7 +60,6 @@ function finishRound() {
 function updateScore(newScore) {
     scores[currentRound - 1] = newScore;
     document.getElementById('currentRound').innerText = `Round ${currentRound}: Your score is ${newScore}`;
-    // total score = sum of all scores
     document.getElementById('previousScores').innerText = `Total Score: ${scores.reduce((a, b) => a + b, 0)}`;
     if (currentRound < totalRounds) {
         currentRound++;
@@ -63,15 +70,14 @@ function updateScore(newScore) {
 }
 
 function finishGame() {
-    // scores = sum of all scores
-    alert(`Game Over! Here are your scores: ${scores.reduce((a, b) => a + b, 0)}`);
-    // Optionally reset the game or redirect the user
+    mean_time_player = mean_time_player / totalRounds;
+    mean_time_player = mean_time_player / 1000;
+    window.location.href = `end_clock_game.html?score=${scores.reduce((a, b) => a + b, 0)}&mean_time=${mean_time_player}`;
 }
 
 function resetGameForNextRound() {
     selectRandomPrompt();
     initializeCanvas();
-    // clear the canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     initializeTimer(timeLimit);
 }
@@ -88,14 +94,6 @@ function finishedPosition() {
     intervalId = null;
     ctx.beginPath();
     callPredictionAPI();
-    // if the user draws something and the prediction is correct, update the score and move to the next round
-
-    if (document.getElementById('predictionText').innerText.includes(X)) {
-        updateScore(1);
-        // reset the clock for the next round
-        clearInterval(intervalId);
-    }
-
 }
 
 function draw(e) {
@@ -143,7 +141,13 @@ function callPredictionAPI() {
     })
         .then(response => response.json())
         .then(data => {
-            document.getElementById('predictionText').innerText = `Prediction: ${data.pred_label} with ${data.max_prob * 100}% confidence`;
+            const emoji = prompts[data.pred_label];
+            const predictionText = `Prediction: ${emoji}`;
+            document.getElementById('predictionText').innerText = predictionText;
+            if (predictionText.includes(X)) {
+                // updateScore(1);
+                finishRound();
+            }
         })
         .catch(error => {
             console.error('Error:', error);
