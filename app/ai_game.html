@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Play Against the Clock</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .drawing-area {
+            display: flex;
+            /* Aligns children (canvas areas) in a row */
+            border-left: 2px solid #000;
+            /* Adds a border between the drawing areas */
+            margin-top: 10px;
+        }
+
+        .user-drawing-area,
+        .ai-drawing-area {
+            flex: 1;
+            /* Ensures both areas are of equal width */
+            display: flex;
+            justify-content: center;
+            /* Centers the canvas inside the div */
+            position: relative;
+            width: 400px;
+            /* Width of each area */
+            height: 400px;
+            /* Height of each area */
+        }
+
+        #drawCanvas,
+        #aiCanvas {
+            border: 1px solid #ccc;
+            /* Adds a border around each canvas */
+        }
+
+        .ai-drawing-area {
+            border-left: 2px dashed #ccc;
+            /* Dashed line separating the areas */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <img src="images/robot.png" alt="Robo Logo" class="game-logo">
+        <p id="countdown" class="countdown"></p>
+        <p id="randomPrompt" class="selection-area"></p>
+        <div class="drawing-area">
+            <div class="user-drawing-area">
+                <canvas id="drawCanvas" width="250" height="250" willReadFrequently="true"></canvas>
+            </div>
+            <div class="ai-drawing-area">
+                <canvas id="aiCanvas" width="250" height="250" willReadFrequently="true"></canvas>
+            </div>
+        </div>
+        <div class="prediction-area">
+            <p id="predictionText">Draw something to see predictions here.</p>
+        </div>
+        <div class="scoreboard">
+            <p id="currentRound">Round 1: Your score is 0</p>
+            <p id="previousScores"></p>
+        </div>
+    </div>
+    <script src="js/ai_game.js"></script>
+</body>
+
+</html>
