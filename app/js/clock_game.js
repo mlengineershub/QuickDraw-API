@@ -13,6 +13,9 @@ const timeLimit = new URLSearchParams(window.location.search).get('difficulty') 
 let mean_time_player = 0;
 let score_player = 0;
 let start_time = 0;
+const player_name = new URLSearchParams(window.location.search).get('playerName');
+const difficulty = new URLSearchParams(window.location.search).get('difficulty');
+
 
 const prompts = {
     "airplane": "✈️", "banana": "🍌", "computer": "💻", "dog": "🐶", "elephant": "🐘",
@@ -72,7 +75,7 @@ function updateScore(newScore) {
 function finishGame() {
     mean_time_player = mean_time_player / totalRounds;
     mean_time_player = mean_time_player / 1000;
-    window.location.href = `end_clock_game.html?score=${scores.reduce((a, b) => a + b, 0)}&mean_time=${mean_time_player}`;
+    window.location.href = `end_clock_game.html?score=${scores.reduce((a, b) => a + b, 0)}&mean_time=${mean_time_player}&player_name=${player_name}&difficulty=${difficulty}&totalRounds=${totalRounds}`;
 }
 
 function resetGameForNextRound() {
