@@ -1,4 +1,10 @@
+
+/**
+ * When DOM if loaded
+ */
 document.addEventListener('DOMContentLoaded', () => {
+
+    // Get game infos
     const params = new URLSearchParams(window.location.search);
     const score = params.get('score');
     const meanTime = params.get('mean_time');
@@ -7,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const difficulty = params.get('difficulty');
 
     // Ensure the time is displayed in a user-friendly format (seconds with two decimal places)
-    const formattedTime = parseFloat(meanTime).toFixed(2);
+    const formattedTime = parseFloat(meanTime).toFixed(2);s
 
     // Display the score and mean time
     document.getElementById('scoreDisplay').textContent = `Your Score: ${score}`;
