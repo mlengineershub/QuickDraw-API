@@ -43,16 +43,16 @@
 </head>
 
 <body>
-    <div class="container">
+    <div class="container" style="max-width: 900px;">
         <img src="images/robot.png" alt="Robo Logo" class="game-logo">
         <p id="countdown" class="countdown"></p>
         <p id="randomPrompt" class="selection-area"></p>
-        <div class="drawing-area">
+        <div class="drawing-area" style="width: 800px;">
             <div class="user-drawing-area">
-                <canvas id="drawCanvas" width="250" height="250" willReadFrequently="true"></canvas>
+                <canvas id="drawCanvas" width="250" height="250" willReadFrequently="true" style="border-top-left-radius: 0.3rem; border-bottom-left-radius: 0.3rem;"></canvas>
             </div>
             <div class="ai-drawing-area">
-                <canvas id="aiCanvas" width="250" height="250" willReadFrequently="true"></canvas>
+                <canvas id="aiCanvas" width="250" height="250" willReadFrequently="true" style="border-top-right-radius: 0.3rem; border-bottom-right-radius: 0.3rem;"></canvas>
             </div>
         </div>
         <div class="prediction-area">
@@ -63,6 +63,10 @@
             <p id="previousScores"></p>
         </div>
     </div>
+    <script src="js/ai_game.js"></script>
+</body>
+
+</html>
     <script src="js/ai_game.js"></script>
 </body>
 
