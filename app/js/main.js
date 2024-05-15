@@ -1,7 +1,14 @@
-document.getElementById('playTime').addEventListener('click', function () {
+
+/*
+ * Redirect the player when clicked on the "play against time" button
+ */
+document.getElementById('playTime').addEventListener('click', () => {
     window.location.href = 'game.html?mode=time';
 });
 
-document.getElementById('playAI').addEventListener('click', function () {
+/*
+ * Redirect the player when clicked on the "play against AI" button
+ */
+document.getElementById('playAI').addEventListener('click', () => {
     window.location.href = 'game.html?mode=ai';
 });
