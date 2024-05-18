@@ -23,6 +23,12 @@ from transformers import (pipeline,
 
 import json
 
+# Imports for Supabase
+from supabase import Client
+
+# Imports for pandas
+import pandas as pd
+
 
 # Load environment variables
 ENV_FILE_PATH = (
@@ -61,6 +67,11 @@ JSON_PATH = os.path.join(UTILS_PATH, 'labels_emoji.json')
 
 with open(JSON_PATH, 'r', encoding='utf-8') as f:
     label_emoji = json.load(f)
+
+# Initialize the Supabase client
+SUPABASE_URL = os.getenv("SUPABASE_URL")
+SUPABASE_KEY = os.getenv("SUPABASE_KEY")
+DB = Client(SUPABASE_URL, SUPABASE_KEY)
 
 
 # Define the endpoints
@@ -155,6 +166,77 @@ async def get_labels():
     dict_label_emoji = dict(zip(labels, emojis))
 
     return dict_label_emoji
+
+
+@app.get("/scores")
+async def get_scores():
+    """
+    Function to return the top 3 scores from the database
+    it return a dictionary with the scores
+
+    score1: {   user: user1,
+                score: score,
+                mean_time: mean_time,
+                mode: mode,
+                difficulty: difficulty}
+
+    score2: {   user: user2,
+                score: score,
+                mean_time: mean_time,
+                mode: mode,
+                difficulty: difficulty}
+
+    score3: {   user: user3,
+                score: score,
+                mean_time: mean_time,
+                mode: mode,
+                difficulty: difficulty}
+    """
+
+    _table = DB.table("scores").select("*").execute()
+    fetch = True
+    for param in _table:
+        if fetch:
+            _data = param
+            fetch = False
+
+    data = _data[1]
+    df = pd.DataFrame(data)
+
+    df = df.sort_values(by='score', ascending=False)
+    df = df.head(3)
+
+    scores = df.to_dict(orient='records')
+
+    return scores
+
+
+@app.post("/add_score")
+async def add_score(user: str,
+                    score: int,
+                    mean_time: float,
+                    mode: str,
+                    difficulty: str):
+    """
+    Function to add a new score to the database
+
+    @params {user: str} the user name
+    @params {score: int} the score
+    @params {mean_time: float} the mean time
+    @params {mode: str} the mode
+    @params {difficulty: str} the difficulty
+    """
+    data = {
+        "user": user,
+        "score": score,
+        "mean_time": mean_time,
+        "mode": mode,
+        "difficulty": difficulty
+    }
+
+    DB.table("scores").insert([data]).execute()
+
+    return {"message": "Score added successfully"}
 
 
 if __name__ == "__main__":
