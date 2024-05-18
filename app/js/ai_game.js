@@ -1,3 +1,18 @@
+function getLabelsSync() {
+    const request = new XMLHttpRequest();
+    request.open('GET', 'http://127.0.0.1:8000/labels', false);
+    request.send(null);
+
+    if (request.status === 200) {
+        return JSON.parse(request.responseText);
+    } else {
+        console.error(`HTTP error! Status: ${request.status}`);
+        return null;
+    }
+}
+
+const prompts = getLabelsSync();
+
 const canvas = document.getElementById('drawCanvas');
 const ctx = canvas.getContext('2d', { willReadFrequently: true });
 canvas.width = 400;
@@ -15,15 +30,6 @@ let score_player = 0;
 let start_time = 0;
 const player_name = new URLSearchParams(window.location.search).get('playerName');
 const difficulty = new URLSearchParams(window.location.search).get('difficulty');
-
-
-const prompts = {
-    "airplane": "✈️", "banana": "🍌", "computer": "💻", "dog": "🐶", "elephant": "🐘",
-    "fish": "🐟", "garden": "🌼", "helmet": "⛑️", "ice cream": "🍦", "jail": "🏛️",
-    "key": "🔑", "lantern": "🏮", "motorbike": "🏍️", "necklace": "📿", "onion": "🧅",
-    "penguin": "🐧", "raccoon": "🦝", "sandwich": "🥪", "table": "🪑", "underwear": "🩲",
-    "vase": "🏺", "watermelon": "🍉", "yoga": "🧘", "zigzag": "〰️"
-};
 
 function selectRandomPrompt() {
     const promptKeys = Object.keys(prompts);
