@@ -171,10 +171,10 @@ async def get_labels():
 
 
 @app.get("/scores")
-async def get_scores():
+async def get_scores(mode: str, difficulty: str):
     """
     Function to return the top 3 scores from the database
-    it return a dictionary with the scores
+    filtered by the given mode and difficulty. It returns a dictionary with the scores.
 
     score1: {   user: user1,
                 score: score,
@@ -204,11 +204,13 @@ async def get_scores():
 
     data = _data[1]
     df = pd.DataFrame(data)
+    df_filtered = df[(df['mode'] == mode) & (df['difficulty'] == difficulty)]
 
-    df = df.sort_values(by='score', ascending=False)
-    df = df.head(3)
+    df_filtered = df_filtered.sort_values(by=['score', 'mean_time'], ascending=[False, True])
 
-    scores = df.to_dict(orient='records')
+    df_top3 = df_filtered.head(3)
+
+    scores = df_top3.to_dict(orient='records')
 
     return scores
 

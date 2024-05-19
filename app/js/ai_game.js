@@ -28,8 +28,8 @@ const speed = new URLSearchParams(window.location.search).get('difficulty') === 
 let mean_time_player = 0;
 let score_player = 0;
 let start_time = 0;
-const player_name = new URLSearchParams(window.location.search).get('playerName');
-const difficulty = new URLSearchParams(window.location.search).get('difficulty');
+const player_name = new URLSearchParams(window.location.search).get('playerName').toLowerCase();
+const difficulty = new URLSearchParams(window.location.search).get('difficulty').toLowerCase();
 
 function selectRandomPrompt() {
     const promptKeys = Object.keys(prompts);
@@ -79,7 +79,7 @@ function updateScore(newScore) {
 function finishGame() {
     mean_time_player = mean_time_player / totalRounds;
     mean_time_player = mean_time_player / 1000;
-    window.location.href = `end_clock_game.html?player_name=${player_name}&score=${scores.reduce((a, b) => a + b, 0)}&mean_time=${mean_time_player}&difficulty=${difficulty}&totalRounds=${totalRounds}`;
+    window.location.href = `end_game.html?mode=ai&player_name=${player_name}&score=${scores.reduce((a, b) => a + b, 0)}&mean_time=${mean_time_player}&difficulty=${difficulty}&totalRounds=${totalRounds}`;
 }
 
 function resetGameForNextRound() {
