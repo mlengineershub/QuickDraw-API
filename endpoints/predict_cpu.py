@@ -1,7 +1,7 @@
 # Imports for environment variables
 from io import BytesIO
 import os
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 
 # Imports for web API
 from fastapi import FastAPI, File, UploadFile
@@ -32,10 +32,10 @@ from utils.config import ScoreData
 
 
 # Load environment variables
-ENV_FILE_PATH = (
-    os.path.join(os.path.dirname(os.path.dirname(__file__)), ".env")
-)
-load_dotenv(dotenv_path=ENV_FILE_PATH)
+# ENV_FILE_PATH = (
+#     os.path.join(os.path.dirname(os.path.dirname(__file__)), ".env")
+# )
+# load_dotenv(dotenv_path=ENV_FILE_PATH)
 
 model_ckpt = os.getenv("MODEL_CKPT")
 host = os.getenv("HOST")
