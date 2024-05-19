@@ -24,6 +24,7 @@ let currentRound = 1;
 let totalRounds = parseInt(new URLSearchParams(window.location.search).get('totalRounds'));
 let scores = new Array(totalRounds).fill(0); // Initialize scores array
 let X = null;
+let promptText = "";
 const speed = new URLSearchParams(window.location.search).get('difficulty') === 'hard' ? 100 : 30;
 let mean_time_player = 0;
 let score_player = 0;
@@ -31,11 +32,15 @@ let start_time = 0;
 const player_name = new URLSearchParams(window.location.search).get('playerName').toLowerCase();
 const difficulty = new URLSearchParams(window.location.search).get('difficulty').toLowerCase();
 
+const DIFFICULTY_DELAY = { "medium" : 20_000, "hard": 10_000 }
+
+
 function selectRandomPrompt() {
     const promptKeys = Object.keys(prompts);
     const randomKey = promptKeys[Math.floor(Math.random() * promptKeys.length)];
     const randomPrompt = `${prompts[randomKey]} ${randomKey.charAt(0).toUpperCase() + randomKey.slice(1)}`;
     X = prompts[randomKey];
+    promptText = randomKey;
     document.getElementById('randomPrompt').innerText = randomPrompt;
 }
 
@@ -55,7 +60,77 @@ function initializeTimer() {
     }, 1000);
 }
 
+/**
+ * Set the AI image
+ * @param {*} name the file name
+ */
+function setAIImage(name) {
+    document.getElementById("ai_image").src = "images/sketchs/" + name + ".png";
+}
+
+// Disable AI image reveal
+let isAIClockEnabled = Date.now();
+
+/**
+ * Init image reveal
+ * @param {*} delay the appearance delay
+ * @returns 
+ */
+function initAIClock(delay) {
+
+    isAIClockEnabled = Date.now();
+    let isAIClockEnabled2 = Number(isAIClockEnabled);
+
+    // Set updates per seconds and animation start time
+    const FPS = 30;
+    const start_time = Date.now();
+
+    // Get DOM element
+    let o = document.getElementById("ai_image_hide");
+    o.style.top = "0px";
+    o.style.height = "400px";
+
+    // Return an asynchronous promise that will be executed during the drawing
+    return new Promise(async (resolve, reject) => {
+
+        // While the delay is not passed
+        while (isAIClockEnabled === isAIClockEnabled2 && Date.now() - start_time < delay) {
+
+            // Get the animation percent time
+            const p = Math.min((Date.now() - start_time) / delay, 1.0);
+            
+            // Update size and position
+            o.style.top = String(Math.floor(p * 400.0)) + "px";
+            o.style.height = String(400 - Math.floor(p * 400.0)) + "px";
+
+            // Sleep
+            await new Promise(r => setTimeout(r, Math.floor(1000 / FPS)));
+        }
+
+        // Make sure size and position are exact
+        o.style.top = "400px";
+        o.style.height = "0px";
+
+        if (isAIClockEnabled === isAIClockEnabled2)
+            finishRound();
+
+        o.style.top = "0px";
+        o.style.height = "400px";
+
+        // Call promise resolve
+        resolve()
+    });
+}
+
+/**
+ * Stop the animation (auto end position)
+ */
+function stopAIClock() {
+    isAIClockEnabled = Date.now();
+}
+
 function finishRound() {
+    stopAIClock();
     const end_time = new Date().getTime();
     const time_diff = end_time - start_time;
     mean_time_player = mean_time_player + time_diff;
@@ -84,12 +159,19 @@ function finishGame() {
 
 function resetGameForNextRound() {
     selectRandomPrompt();
+    setAIImage(promptText);
     initializeCanvas();
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     initializeTimer();
+    drawingStarted = false;
 }
 
 function startPosition(e) {
+    if (!drawingStarted) {
+        drawingStarted = true;
+        initAIClock(DIFFICULTY_DELAY[difficulty] || 20000);
+    }
+
     painting = true;
     draw(e);
     if (!intervalId) intervalId = setInterval(callPredictionAPI, 1500);
@@ -103,6 +185,7 @@ function finishedPosition() {
     callPredictionAPI();
 }
 
+drawingStarted = false;
 function draw(e) {
     if (!painting) return;
     ctx.lineWidth = 5;
