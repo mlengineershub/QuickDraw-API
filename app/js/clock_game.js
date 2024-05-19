@@ -1,18 +1,3 @@
-function getLabelsSync() {
-    const request = new XMLHttpRequest();
-    request.open('GET', 'http://127.0.0.1:8000/labels', false);
-    request.send(null);
-
-    if (request.status === 200) {
-        return JSON.parse(request.responseText);
-    } else {
-        console.error(`HTTP error! Status: ${request.status}`);
-        return null;
-    }
-}
-
-const prompts = getLabelsSync();
-
 const canvas = document.getElementById('drawCanvas');
 const ctx = canvas.getContext('2d', { willReadFrequently: true });
 canvas.width = 400;
@@ -30,6 +15,21 @@ let score_player = 0;
 let start_time = 0;
 const player_name = new URLSearchParams(window.location.search).get('playerName');
 const difficulty = new URLSearchParams(window.location.search).get('difficulty');
+
+function getLabelsSync() {
+    const request = new XMLHttpRequest();
+    request.open('GET', 'http://127.0.0.1:8000/labels', false);
+    request.send(null);
+
+    if (request.status === 200) {
+        return JSON.parse(request.responseText);
+    } else {
+        console.error(`HTTP error! Status: ${request.status}`);
+        return null;
+    }
+}
+
+const prompts = getLabelsSync();
 
 function selectRandomPrompt() {
     console.log(prompts);
@@ -83,7 +83,7 @@ function updateScore(newScore) {
 function finishGame() {
     mean_time_player = mean_time_player / totalRounds;
     mean_time_player = mean_time_player / 1000;
-    window.location.href = `end_clock_game.html?score=${scores.reduce((a, b) => a + b, 0)}&mean_time=${mean_time_player}&player_name=${player_name}&difficulty=${difficulty}&totalRounds=${totalRounds}`;
+    window.location.href = `end_clock_game.html?player_name=${player_name}&score=${scores.reduce((a, b) => a + b, 0)}&mean_time=${mean_time_player}&difficulty=${difficulty}&totalRounds=${totalRounds}`;
 }
 
 function resetGameForNextRound() {
@@ -156,7 +156,6 @@ function callPredictionAPI() {
             const predictionText = `Prediction: ${emoji}`;
             document.getElementById('predictionText').innerText = predictionText;
             if (predictionText.includes(X)) {
-                // updateScore(1);
                 finishRound();
             }
         })

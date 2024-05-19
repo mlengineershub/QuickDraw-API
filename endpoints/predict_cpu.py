@@ -28,6 +28,8 @@ from transformers import (
 
 import json
 
+from utils.config import ScoreData
+
 
 # Load environment variables
 ENV_FILE_PATH = (
@@ -212,29 +214,14 @@ async def get_scores():
 
 
 @app.post("/add_score")
-async def add_score(user: str,
-                    score: int,
-                    mean_time: float,
-                    mode: str,
-                    difficulty: str):
+async def add_score(data: ScoreData):
     """
     Function to add a new score to the database
-
-    @params {user: str} the user name
-    @params {score: int} the score
-    @params {mean_time: float} the mean time
-    @params {mode: str} the mode
-    @params {difficulty: str} the difficulty
     """
-    data = {
-        "user": user,
-        "score": score,
-        "mean_time": mean_time,
-        "mode": mode,
-        "difficulty": difficulty
-    }
 
-    DB.table("scores").insert([data]).execute()
+    data_dict = data.dict()
+
+    DB.table("scores").insert([data_dict]).execute()
 
     return {"message": "Score added successfully"}
 

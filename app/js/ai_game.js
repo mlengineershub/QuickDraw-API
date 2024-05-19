@@ -79,7 +79,7 @@ function updateScore(newScore) {
 function finishGame() {
     mean_time_player = mean_time_player / totalRounds;
     mean_time_player = mean_time_player / 1000;
-    window.location.href = `end_clock_game.html?score=${scores.reduce((a, b) => a + b, 0)}&mean_time=${mean_time_player}&player_name=${player_name}&difficulty=${difficulty}&totalRounds=${totalRounds}`;
+    window.location.href = `end_clock_game.html?player_name=${player_name}&score=${scores.reduce((a, b) => a + b, 0)}&mean_time=${mean_time_player}&difficulty=${difficulty}&totalRounds=${totalRounds}`;
 }
 
 function resetGameForNextRound() {
