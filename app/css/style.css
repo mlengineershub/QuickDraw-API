@@ -368,6 +368,30 @@ form button[type="submit"]:hover {
     border: 1px solid #ccc;
 }
 
+/*  */
 .ai-drawing-area {
     border-left: 2px dashed #ccc;
+}
+
+#aiCanvas {
+    width: 400px;
+    height: 400px;
+    border-top-right-radius: 0.3rem;
+    border-bottom-right-radius: 0.3rem;
+}
+
+#ai_image {
+    width: 400px;
+    height: 400px;
+    border-top-right-radius: 0.3rem;
+    border-bottom-right-radius: 0.3rem;
+}
+
+#ai_image_hide {
+    width: 400px;
+    height: 400px;
+    background-color: #fff;
+    position: absolute;
+    left: 0px;
+    top: 0px;
 }
