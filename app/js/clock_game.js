@@ -60,7 +60,7 @@ function initializeTimer(duration) {
 function finishRound() {
     const end_time = new Date().getTime();
     let time_diff = end_time - start_time;
-    if (time_diff > timeLimit) {
+    if (time_diff > timeLimit * 1000) {
         time_diff = timeLimit * 1000;
     };
     mean_time_player = mean_time_player + time_diff;
