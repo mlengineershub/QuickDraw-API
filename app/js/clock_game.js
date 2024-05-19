@@ -16,17 +16,25 @@ let start_time = 0;
 const player_name = new URLSearchParams(window.location.search).get('playerName');
 const difficulty = new URLSearchParams(window.location.search).get('difficulty');
 
+function getLabelsSync() {
+    const request = new XMLHttpRequest();
+    request.open('GET', 'http://127.0.0.1:8000/labels', false);
+    request.send(null);
 
-const prompts = {
-    "airplane": "✈️", "banana": "🍌", "computer": "💻", "dog": "🐶", "elephant": "🐘",
-    "fish": "🐟", "garden": "🌼", "helmet": "⛑️", "ice cream": "🍦", "jail": "🏛️",
-    "key": "🔑", "lantern": "🏮", "motorbike": "🏍️", "necklace": "📿", "onion": "🧅",
-    "penguin": "🐧", "raccoon": "🦝", "sandwich": "🥪", "table": "🪑", "underwear": "🩲",
-    "vase": "🏺", "watermelon": "🍉", "yoga": "🧘", "zigzag": "〰️"
-};
+    if (request.status === 200) {
+        return JSON.parse(request.responseText);
+    } else {
+        console.error(`HTTP error! Status: ${request.status}`);
+        return null;
+    }
+}
+
+const prompts = getLabelsSync();
 
 function selectRandomPrompt() {
+    console.log(prompts);
     const promptKeys = Object.keys(prompts);
+    console.log(promptKeys);
     const randomKey = promptKeys[Math.floor(Math.random() * promptKeys.length)];
     const randomPrompt = `${prompts[randomKey]} ${randomKey.charAt(0).toUpperCase() + randomKey.slice(1)}`;
     X = prompts[randomKey];
@@ -75,7 +83,7 @@ function updateScore(newScore) {
 function finishGame() {
     mean_time_player = mean_time_player / totalRounds;
     mean_time_player = mean_time_player / 1000;
-    window.location.href = `end_clock_game.html?score=${scores.reduce((a, b) => a + b, 0)}&mean_time=${mean_time_player}&player_name=${player_name}&difficulty=${difficulty}&totalRounds=${totalRounds}`;
+    window.location.href = `end_clock_game.html?player_name=${player_name}&score=${scores.reduce((a, b) => a + b, 0)}&mean_time=${mean_time_player}&difficulty=${difficulty}&totalRounds=${totalRounds}`;
 }
 
 function resetGameForNextRound() {
@@ -148,7 +156,6 @@ function callPredictionAPI() {
             const predictionText = `Prediction: ${emoji}`;
             document.getElementById('predictionText').innerText = predictionText;
             if (predictionText.includes(X)) {
-                // updateScore(1);
                 finishRound();
             }
         })
