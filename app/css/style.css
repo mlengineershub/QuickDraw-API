@@ -1,5 +1,10 @@
-body,
-h1,
+body {
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+}
+
+h2,
 p,
 form {
     margin: 20px 50px;
@@ -14,24 +19,23 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    height: 100%;
     padding: 20px;
 }
 
 .container {
     text-align: center;
     background: white;
-    padding: 60px;
+    padding: 10px 10px;
     border-radius: 15px;
     box-shadow: 1px 8px 10px 8px rgba(0, 0, 0, 0.2);
-    width: 100%;
-    max-width: 600px;
+    width: 600px;
+    height: 80%;
     box-sizing: border-box;
 }
 
-h1 {
+h2 {
     color: #5a5a66;
-    margin-bottom: 20px;
 }
 
 p {
@@ -156,10 +160,10 @@ form button[type="submit"]:hover {
 }
 
 #results {
-    margin-top: 30px;
+    margin-top: 5px;
     border-top: 2px solid #dee2e6;
-    padding-top: 20px;
-    text-align: left;
+    padding-top: 5px;
+    text-align: center;
 }
 
 .result-item p {
@@ -170,7 +174,6 @@ form button[type="submit"]:hover {
 }
 
 .result-item {
-    margin-bottom: 15px;
     padding-bottom: 15px;
 }
 
@@ -200,23 +203,23 @@ form button[type="submit"]:hover {
 .animated-entry {
     position: relative;
     transition: all 1s ease-out;
-    width: 250px;
+    width: 50px;
 }
 
 .game-logo {
-    width: 100px;
-    height: auto;
+    width: 50px;
 }
 
 .countdown {
-    font-size: 24px;
+    font-size: 20px;
     color: red;
-    margin: 20px 0;
+    margin: 10px 0;
 }
 
 .selection-area {
-    font-size: 24px;
-    margin-top: 20px;
+    font-size: 22px;
+    margin-top: 10px;
+    margin-left: 5rem;
 }
 
 .drawing-area {
@@ -230,28 +233,26 @@ form button[type="submit"]:hover {
 }
 
 .prediction-area {
-    margin-top: 20px;
-    padding: 15px;
+    margin-top: 10px;
 }
 
 #predictionText {
     font-size: 18px;
     color: #555;
+    padding: 0;
 }
 .scoreboard {
-    margin-top: 20px;
+    margin-top: 0px;
 }
 
 .scoreboard p {
-    margin: 10px 0;
+    margin: 5px 0;
     font-size: 18px;
     color: #6c757d;
 } 
 
 .scoreboard-item {
     background-color: white;
-    padding: 10px;
-    margin: 5px 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -264,7 +265,7 @@ form button[type="submit"]:hover {
 }
 
 #podium {
-    margin-top: 20px;
+    margin-top: 5px;
     text-align: center;
 }
 
@@ -296,21 +297,21 @@ form button[type="submit"]:hover {
 
 #first-place {
     order: 2;
-    height: 200px;
+    height: 180px;
     background-color: #fbe567e6;
     border-color: #fbe567e6;
 }
 
 #second-place {
     order: 1;
-    height: 170px;
+    height: 150px;
     background-color: silver;
     border-color: silver;
 }
 
 #third-place {
     order: 3;
-    height: 140px;
+    height: 120px;
     background-color: #e09c57;
     border-color: #e09c57;
 }
@@ -335,7 +336,7 @@ form button[type="submit"]:hover {
 
 .home-button i {
     margin: 0; 
-    font-size: 45px; 
+    font-size: 35px; 
 }
 
 .home-button:hover {
@@ -368,7 +369,7 @@ form button[type="submit"]:hover {
     border: 1px solid #ccc;
 }
 
-/*  */
+
 .ai-drawing-area {
     border-left: 2px dashed #ccc;
 }
@@ -394,4 +395,26 @@ form button[type="submit"]:hover {
     position: absolute;
     left: 0px;
     top: 0px;
+}
+
+#prompt_div {
+    flex-direction: row;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#clear_button {
+    background-color: #fff;
+    padding: 0.6rem 1rem;
+    padding-bottom: 0.7rem;
+    border-radius: 0.3rem;
+    color: #f3f4f6;
+    font-size: 24px;
+    cursor: pointer;
+    color: black;
+    margin-bottom: 14px;
+    margin-right: 6rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
 }

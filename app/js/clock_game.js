@@ -71,7 +71,8 @@ function finishRound() {
 
 function updateScore(newScore) {
     scores[currentRound - 1] = newScore;
-    document.getElementById('currentRound').innerText = `Round ${currentRound}: Your score is ${newScore}`;
+    let emoji = newScore == 1 ? "✅" : "❌";   
+    document.getElementById('currentRound').innerText = `Round ${currentRound}: ${emoji}`;
     document.getElementById('previousScores').innerText = `Total Score: ${scores.reduce((a, b) => a + b, 0)}`;
     if (currentRound < totalRounds) {
         currentRound++;
@@ -79,6 +80,12 @@ function updateScore(newScore) {
     } else {
         finishGame();
     }
+}
+
+function clearCanvas() {
+    ctx.fillStyle = 'white';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    callPredictionAPI();
 }
 
 function finishGame() {

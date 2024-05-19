@@ -6,13 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Play Against the Clock</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 
 <body>
-    <div class="container" style="max-width: 900px;">
+    <div class="container" style="width: 900px;">
         <img src="images/robot.png" alt="Robo Logo" class="game-logo">
         <p id="countdown" class="countdown"></p>
-        <p id="randomPrompt" class="selection-area"></p>
+        <div id="prompt_div">
+            <p id="randomPrompt" class="selection-area"></p>
+            <button id="clear_button" onclick="clearCanvas()"><i class="fas fa-eraser"></i></button>
+        </div>
         <div class="drawing-area" style="width: 800px;">
             <div class="user-drawing-area">
                 <canvas id="drawCanvas" width="250" height="250" willReadFrequently="true" style="border-top-left-radius: 0.3rem; border-bottom-left-radius: 0.3rem;"></canvas>
@@ -30,7 +34,6 @@
         <div class="scoreboard">
             <div class="scoreboard-item">
                 <span id="currentRound">Round 1</span>
-                <span>Your score is 0</span>
             </div>
             <p id="previousScores"></p>
         </div>

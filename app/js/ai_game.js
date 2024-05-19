@@ -19,10 +19,10 @@ canvas.width = 400;
 canvas.height = 400;
 let painting = false;
 let intervalId = null;
-let timerInterval = null; // Global timer interval
+let timerInterval = null;
 let currentRound = 1;
 let totalRounds = parseInt(new URLSearchParams(window.location.search).get('totalRounds'));
-let scores = new Array(totalRounds).fill(0); // Initialize scores array
+let scores = new Array(totalRounds).fill(0);
 let X = null;
 let promptText = "";
 const speed = new URLSearchParams(window.location.search).get('difficulty') === 'hard' ? 100 : 30;
@@ -45,8 +45,7 @@ function selectRandomPrompt() {
 }
 
 function initializeTimer() {
-    // in this function i want the timer to start at 0 and count up
-    clearInterval(timerInterval); // Clear existing timer
+    clearInterval(timerInterval);
     let timer = 0, minutes, seconds;
     start_time = new Date().getTime();
     const countdown = document.getElementById('countdown');
@@ -60,54 +59,36 @@ function initializeTimer() {
     }, 1000);
 }
 
-/**
- * Set the AI image
- * @param {*} name the file name
- */
 function setAIImage(name) {
     document.getElementById("ai_image").src = "images/sketchs/" + name + ".png";
 }
 
-// Disable AI image reveal
 let isAIClockEnabled = Date.now();
 
-/**
- * Init image reveal
- * @param {*} delay the appearance delay
- * @returns 
- */
 function initAIClock(delay) {
 
     isAIClockEnabled = Date.now();
     let isAIClockEnabled2 = Number(isAIClockEnabled);
 
-    // Set updates per seconds and animation start time
     const FPS = 30;
     const start_time = Date.now();
 
-    // Get DOM element
     let o = document.getElementById("ai_image_hide");
     o.style.top = "0px";
     o.style.height = "400px";
 
-    // Return an asynchronous promise that will be executed during the drawing
     return new Promise(async (resolve, reject) => {
 
-        // While the delay is not passed
         while (isAIClockEnabled === isAIClockEnabled2 && Date.now() - start_time < delay) {
 
-            // Get the animation percent time
             const p = Math.min((Date.now() - start_time) / delay, 1.0);
             
-            // Update size and position
             o.style.top = String(Math.floor(p * 400.0)) + "px";
             o.style.height = String(400 - Math.floor(p * 400.0)) + "px";
 
-            // Sleep
             await new Promise(r => setTimeout(r, Math.floor(1000 / FPS)));
         }
 
-        // Make sure size and position are exact
         o.style.top = "400px";
         o.style.height = "0px";
 
@@ -117,14 +98,10 @@ function initAIClock(delay) {
         o.style.top = "0px";
         o.style.height = "400px";
 
-        // Call promise resolve
         resolve()
     });
 }
 
-/**
- * Stop the animation (auto end position)
- */
 function stopAIClock() {
     isAIClockEnabled = Date.now();
 }
@@ -141,7 +118,8 @@ function finishRound() {
 
 function updateScore(newScore) {
     scores[currentRound - 1] = newScore;
-    document.getElementById('currentRound').innerText = `Round ${currentRound}: Your score is ${newScore}`;
+    let emoji = newScore == 1 ? "✅" : "❌";   
+    document.getElementById('currentRound').innerText = `Round ${currentRound}: ${emoji}`;
     document.getElementById('previousScores').innerText = `Total Score: ${scores.reduce((a, b) => a + b, 0)}`;
     if (currentRound < totalRounds) {
         currentRound++;
@@ -149,6 +127,12 @@ function updateScore(newScore) {
     } else {
         finishGame();
     }
+}
+
+function clearCanvas() {
+    ctx.fillStyle = 'white';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    callPredictionAPI();
 }
 
 function finishGame() {

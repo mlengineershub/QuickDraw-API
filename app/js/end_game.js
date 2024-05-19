@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // Get game infos
     const params = new URLSearchParams(window.location.search);
     const score = params.get('score');
     const meanTime = params.get('mean_time');
@@ -9,17 +8,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const difficulty = params.get('difficulty').toLowerCase();
     const mode = params.get('mode').toLowerCase();
 
-    // Ensure the time is displayed in a user-friendly format (seconds with two decimal places)
     const formattedTime = parseFloat(meanTime).toFixed(2);
 
-    // Display the score and mean time
     document.getElementById('scoreValue').textContent = `${score}`;
     document.getElementById('timeValue').textContent = `${formattedTime} seconds`;
     document.getElementById('playerNameValue').textContent = `${player_name}`;
     document.getElementById('difficultyValue').textContent = `${difficulty}`;
     document.getElementById('totalRoundsValue').textContent = `${totalRounds}`;
 
-    // Send the score to the server
     const postData = {
         user: player_name,
         score: parseInt(score),
@@ -46,7 +42,6 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Error:', error);
         });
 
-    // Get the podium from the server 
     fetch(`http://127.0.0.1:8000/scores?mode=${mode}&difficulty=${difficulty}`)
         .then(response => response.json())
         .then(data => {
