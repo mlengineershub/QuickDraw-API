@@ -6,40 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Play Against the Clock</title>
     <link rel="stylesheet" href="css/style.css">
-    <style>
-        .drawing-area {
-            display: flex;
-            /* Aligns children (canvas areas) in a row */
-            border-left: 2px solid #000;
-            /* Adds a border between the drawing areas */
-            margin-top: 10px;
-        }
-
-        .user-drawing-area,
-        .ai-drawing-area {
-            flex: 1;
-            /* Ensures both areas are of equal width */
-            display: flex;
-            justify-content: center;
-            /* Centers the canvas inside the div */
-            position: relative;
-            width: 100%;
-            /* Width of each area */
-            height: 100%;
-            /* Height of each area */
-        }
-
-        #drawCanvas,
-        #aiCanvas {
-            border: 1px solid #ccc;
-            /* Adds a border around each canvas */
-        }
-
-        .ai-drawing-area {
-            border-left: 2px dashed #ccc;
-            /* Dashed line separating the areas */
-        }
-    </style>
 </head>
 
 <body>
