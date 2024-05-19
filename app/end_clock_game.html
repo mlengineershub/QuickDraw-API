@@ -6,19 +6,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Game Over</title>
     <link rel="stylesheet" href="css/style.css"> <!-- Link to your CSS file -->
-    <script src="js/end_clock_game.js" defer></script> <!-- Link to your JavaScript file -->
+    
 </head>
 
 <body>
     <div class="container">
         <h1>Game Over!</h1>
         <div id="results">
-            <p id="playerName">playerName:</p>
-            <p id="difficulty">difficulty</p>
-            <p id="totalRounds">totalRounds</p>
-            <p id="scoreDisplay">Loading score...</p>
-            <p id="timeDisplay">Loading time...</p>
+            <div class="result-item">
+                <p>Player Name: <span id="playerNameValue">playerName</span></p>
+            </div>
+            <div class="result-item">
+                <p>Difficulty: <span id="difficultyValue">difficulty</span></p>
+            </div>
+            <div class="result-item">
+                <p>Total Rounds: <span id="totalRoundsValue">totalRounds</span></p>
+            </div>
+            <div class="result-item">
+                <p>Score: <span id="scoreValue">Loading score...</span></p>
+            </div>
+            <div class="result-item">
+                <p>Time: <span id="timeValue">Loading time...</span></p>
+            </div>
         </div>
+        <script src="js/end_clock_game.js" defer></script> <!-- Link to your JavaScript file -->
     </div>
 </body>
 

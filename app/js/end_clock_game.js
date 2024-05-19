@@ -19,11 +19,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const formattedTime = parseFloat(meanTime).toFixed(2);
 
     // Display the score and mean time
-    document.getElementById('scoreDisplay').textContent = `Your Score: ${score}`;
-    document.getElementById('timeDisplay').textContent = `Average Time Per Round: ${formattedTime} seconds`;
-    document.getElementById('playerName').textContent = `Player Name: ${player_name}`;
-    document.getElementById('difficulty').textContent = `Difficulty: ${difficulty}`;
-    document.getElementById('totalRounds').textContent = `Total Rounds: ${totalRounds}`;
+    document.getElementById('scoreValue').textContent = `${score}`;
+    document.getElementById('timeValue').textContent = `${formattedTime} seconds`;
+    document.getElementById('playerNameValue').textContent = `${player_name}`;
+    document.getElementById('difficultyValue').textContent = `${difficulty}`;
+    document.getElementById('totalRoundsValue').textContent = `${totalRounds}`;
 
     // Send the score to the server
     const postData = {

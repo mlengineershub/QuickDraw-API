@@ -2,14 +2,14 @@ body,
 h1,
 p,
 form {
-    margin: 0;
+    margin: 20px 50px;
     padding: 0;
     box-sizing: border-box;
 }
 
 body {
     font-family: 'Arial', sans-serif;
-    background-color: #f4f4f9;
+    background: url(../images/background.jpg);
     color: #333;
     display: flex;
     justify-content: center;
@@ -21,11 +21,12 @@ body {
 .container {
     text-align: center;
     background: white;
-    padding: 40px;
-    border-radius: 8px;
-    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.1);
+    padding: 60px;
+    border-radius: 15px;
+    box-shadow: 1px 8px 10px 8px rgba(0, 0, 0, 0.2);
     width: 100%;
     max-width: 600px;
+    box-sizing: border-box;
 }
 
 h1 {
@@ -46,11 +47,12 @@ button {
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 16px;
+    font-size: 20px;
     margin: 4px 2px;
     cursor: pointer;
-    border-radius: 4px;
+    border-radius: 10px;
     transition: background-color 0.3s ease;
+    box-shadow: 3px 5px 10px 2px rgba(0, 0, 0, 0.2);
 }
 
 button:hover {
@@ -69,18 +71,113 @@ form select {
 }
 
 form button[type="submit"] {
-    width: 100%;
+    font-size: 20px;
+    width: 50%;
+    margin: 30px auto 0 auto;
     background-color: #555;
     color: white;
-    padding: 14px 20px;
+    padding: 20px 14px;
     margin: 8px 0;
     border: none;
-    border-radius: 4px;
+    border-radius: 10px;
     cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+form button[type="submit"] i {
+    margin-left: 10px;  /* Espace entre le texte et l'icône */
 }
 
 form button[type="submit"]:hover {
     background-color: #444;
+    transform: translateY(-1px);
+}
+
+
+#playTime,
+#playAI {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 20px 30px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 20px;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    align-items: center;
+    margin: 15px;
+}
+
+#playTime:hover,
+#playAI:hover {
+    background-color: #45a049;
+    transform: translateY(-1px);
+}
+
+#playTime i,
+#playAI i {
+    margin-left: 10px;
+}
+
+#gameSetup input[type="text"],
+#gameSetup select {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin: 10px 0;
+    border: none;
+    border-bottom: 2px solid #ccc;
+    background-color: transparent;
+    font-size: 16px;
+    transition: border-bottom-color 0.3s;
+}
+
+#gameSetup input[type="text"]:focus,
+#gameSetup select:focus {
+    border-bottom-color: #007bff;
+    outline: none;
+}
+
+#gameSetup select {
+    padding: 12px; 
+    font-size: 16px; 
+}
+
+#gameSetup select option {
+    padding: 12px; 
+    font-size: 16px; 
+}
+
+.game-mode-header p {
+    font-size: 18px;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+#results {
+    margin-top: 30px;
+    border-top: 2px solid #dee2e6;
+    padding-top: 20px;
+    text-align: left;
+}
+
+.result-item p {
+    color: #6c757d;
+    margin: 10px 0;
+    font-size: 18px;
+    line-height: 1.5;
+}
+
+.result-item {
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+}
+
+.result-item span {
+    color: #212529;
+    font-weight: bold;
+    margin-left: 10px;
 }
 
 .floating {
@@ -94,29 +191,27 @@ form button[type="submit"]:hover {
 #logo {
     display: block;
     margin: 0 auto;
-    width: 200px;
+    width: auto;       /* Maintient le rapport d'aspect */
+    height: auto;   
+    max-width: 100%;   
     border-radius: 0.3rem;
 }
 
 .animated-entry {
-    position: fixed;
-    left: -100%;
-    transition: left 1s ease-out;
-    bottom: 35%;
+    position: relative;
+    transition: all 1s ease-out;
     width: 250px;
-
 }
 
 .game-logo {
-    display: block;
-    margin: 0 auto;
     width: 100px;
     height: auto;
 }
 
-.container {
-    text-align: center;
-    width: 100%;
+.countdown {
+    font-size: 24px;
+    color: red;
+    margin: 20px 0;
 }
 
 .selection-area {
@@ -125,11 +220,13 @@ form button[type="submit"]:hover {
 }
 
 .drawing-area {
-    border: 2px solid #ccc;
+    border: 3px solid #ccc;
     position: relative;
     margin: 20px auto;
     width: 400px;
     height: 400px;
+    border-radius: 10px;
+    overflow: hidden;
 }
 
 canvas {
@@ -138,17 +235,36 @@ canvas {
 }
 
 .prediction-area {
-    text-align: center;
+    margin-top: 20px;
+    padding: 15px;
+}
+
+#predictionText {
+    font-size: 18px;
+    color: #555;
+}
+.scoreboard {
     margin-top: 20px;
 }
 
-.countdown {
-    font-size: 24px;
-    color: red;
-    margin: 10px;
+.scoreboard p {
+    margin: 10px 0;
+    font-size: 18px;
+    color: #6c757d;
+} 
+
+.scoreboard-item {
+    background-color: white;
+    padding: 10px;
+    margin: 5px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #ccc;
 }
 
-#results p {
+.scoreboard-item span {
     font-size: 18px;
-    color: #666;
+    color: #495057;
 }
+

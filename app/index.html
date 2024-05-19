@@ -6,15 +6,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QuickDraw Game</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 
 <body>
     <div class="container">
-        <img src="images/logo.png" alt="QuickDraw Logo" id="logo" style="width: 200px; margin-bottom: 20px;">
+        <img src="images/logo.png" alt="QuickDraw Logo" id="logo" >
+
         <h1>Welcome to QuickDraw!</h1>
-        <p>Choose your game mode:</p>
-        <button id="playTime">Play Against Time</button>
-        <button id="playAI">Play Against AI</button>
+        <div class="game-mode-header">
+            <p>Choose your game mode</p>
+        </div>
+        <button id="playTime">
+            <span class="button-text">Play </span>
+            <i class="fas fa-clock"></i>
+        </button>
+        <button id="playAI">
+            <span class="button-text">Play </span>
+            <i class="fas fa-robot"></i>
+        </button>
     </div>
 
     <script src="js/main.js"></script>
