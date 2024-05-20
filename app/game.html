@@ -6,37 +6,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Play QuickDraw</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 
 <body>
-    <img src="" alt="Game Logo" id="gameLogo" class="animated-entry">
+    
     <div class="container">
-        <h1>Game Setup</h1>
+        <button class="home-button" onclick="location.href='index.html'">
+            <i class="fas fa-home"></i>
+        </button>
+        <h2>Game Setup</h2>
+        <img src="" alt="Game Logo" id="gameLogo" class="animated-entry">
         <form id="gameSetup">
             <input type="text" id="playerName" placeholder="Enter your name" required>
             <select id="difficulty">
                 <option value="medium">Medium</option>
                 <option value="hard">Hard</option>
             </select>
-            <select id="rounds">
+            <select id="rounds" style="margin-bottom: 30px;">
                 <option value="1">1 Round</option>
                 <option value="2">2 Rounds</option>
                 <option value="3">3 Rounds</option>
             </select>
-            <button type="submit">Start Game</button>
+            <button type="submit">Start Game   <i class="fas fa-play"></i></button>
         </form>
     </div>
-
-    <script src="js/game.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const params = new URLSearchParams(window.location.search);
             const mode = params.get('mode');
             const gameLogo = document.getElementById('gameLogo');
             gameLogo.src = mode === 'time' ? 'images/clock.png' : 'images/robot.png';
-            setTimeout(() => gameLogo.style.left = '20%', 100);
         });
     </script>
+    <script src="js/game.js"></script>
+   
 </body>
 
 </html>

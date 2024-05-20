@@ -1,36 +1,41 @@
-body,
-h1,
+body {
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+}
+
+h2,
 p,
 form {
-    margin: 0;
+    margin: 20px 50px;
     padding: 0;
     box-sizing: border-box;
 }
 
 body {
     font-family: 'Arial', sans-serif;
-    background-color: #f4f4f9;
+    background: url(../images/background.jpg);
     color: #333;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    height: 100%;
     padding: 20px;
 }
 
 .container {
     text-align: center;
     background: white;
-    padding: 40px;
-    border-radius: 8px;
-    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 600px;
+    padding: 10px 10px;
+    border-radius: 15px;
+    box-shadow: 1px 8px 10px 8px rgba(0, 0, 0, 0.2);
+    width: 600px;
+    height: 80%;
+    box-sizing: border-box;
 }
 
-h1 {
+h2 {
     color: #5a5a66;
-    margin-bottom: 20px;
 }
 
 p {
@@ -46,11 +51,12 @@ button {
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 16px;
+    font-size: 20px;
     margin: 4px 2px;
     cursor: pointer;
-    border-radius: 4px;
+    border-radius: 10px;
     transition: background-color 0.3s ease;
+    box-shadow: 3px 5px 10px 2px rgba(0, 0, 0, 0.2);
 }
 
 button:hover {
@@ -69,18 +75,112 @@ form select {
 }
 
 form button[type="submit"] {
-    width: 100%;
+    font-size: 20px;
+    width: 50%;
+    margin: 30px auto 0 auto;
     background-color: #555;
     color: white;
-    padding: 14px 20px;
+    padding: 20px 14px;
     margin: 8px 0;
     border: none;
-    border-radius: 4px;
+    border-radius: 10px;
     cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+form button[type="submit"] i {
+    margin-left: 10px;  
 }
 
 form button[type="submit"]:hover {
     background-color: #444;
+    transform: translateY(-1px);
+}
+
+
+#playTime,
+#playAI {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 20px 30px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 20px;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    align-items: center;
+    margin: 15px;
+}
+
+#playTime:hover,
+#playAI:hover {
+    background-color: #45a049;
+    transform: translateY(-1px);
+}
+
+#playTime i,
+#playAI i {
+    margin-left: 10px;
+}
+
+#gameSetup input[type="text"],
+#gameSetup select {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin: 10px 0;
+    border: none;
+    border-bottom: 2px solid #ccc;
+    background-color: transparent;
+    font-size: 16px;
+    transition: border-bottom-color 0.3s;
+}
+
+#gameSetup input[type="text"]:focus,
+#gameSetup select:focus {
+    border-bottom-color: #007bff;
+    outline: none;
+}
+
+#gameSetup select {
+    padding: 12px; 
+    font-size: 16px; 
+}
+
+#gameSetup select option {
+    padding: 12px; 
+    font-size: 16px; 
+}
+
+.game-mode-header p {
+    font-size: 18px;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+#results {
+    margin-top: 5px;
+    border-top: 2px solid #dee2e6;
+    padding-top: 5px;
+    text-align: center;
+}
+
+.result-item p {
+    color: #6c757d;
+    margin: 10px 0;
+    font-size: 18px;
+    line-height: 1.5;
+}
+
+.result-item {
+    padding-bottom: 15px;
+}
+
+.result-item span {
+    color: #212529;
+    font-weight: bold;
+    margin-left: 10px;
 }
 
 .floating {
@@ -94,61 +194,227 @@ form button[type="submit"]:hover {
 #logo {
     display: block;
     margin: 0 auto;
-    width: 200px;
+    width: auto;       
+    height: auto;   
+    max-width: 100%;   
     border-radius: 0.3rem;
 }
 
 .animated-entry {
-    position: fixed;
-    left: -100%;
-    transition: left 1s ease-out;
-    bottom: 35%;
-    width: 250px;
-
+    position: relative;
+    transition: all 1s ease-out;
+    width: 50px;
 }
 
 .game-logo {
-    display: block;
-    margin: 0 auto;
-    width: 100px;
-    height: auto;
+    width: 50px;
 }
 
-.container {
-    text-align: center;
-    width: 100%;
+.countdown {
+    font-size: 20px;
+    color: red;
+    margin: 10px 0;
 }
 
 .selection-area {
-    font-size: 24px;
-    margin-top: 20px;
+    font-size: 22px;
+    margin-top: 10px;
+    margin-left: 5rem;
 }
 
 .drawing-area {
-    border: 2px solid #ccc;
+    border: 3px solid #ccc;
     position: relative;
     margin: 20px auto;
     width: 400px;
     height: 400px;
-}
-
-canvas {
-    width: 100%;
-    height: 100%;
+    border-radius: 10px;
+    overflow: hidden;
 }
 
 .prediction-area {
-    text-align: center;
-    margin-top: 20px;
+    margin-top: 10px;
 }
 
-.countdown {
-    font-size: 24px;
-    color: red;
-    margin: 10px;
-}
-
-#results p {
+#predictionText {
     font-size: 18px;
-    color: #666;
+    color: #555;
+    padding: 0;
+}
+.scoreboard {
+    margin-top: 0px;
+}
+
+.scoreboard p {
+    margin: 5px 0;
+    font-size: 18px;
+    color: #6c757d;
+} 
+
+.scoreboard-item {
+    background-color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #ccc;
+}
+
+.scoreboard-item span {
+    font-size: 18px;
+    color: #495057;
+}
+
+#podium {
+    margin-top: 5px;
+    text-align: center;
+}
+
+#podium-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+}
+
+.podium-block {
+    width: 120px;
+    padding: 10px;
+    text-align: center;
+    border: 2px solid #dee2e6;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 0 10px;
+    color: #fff;
+    font-weight: bold;
+}
+
+.podium-block h3 {
+    margin: 10px 0;
+}
+
+.podium-block p {
+    margin: 5px 0;
+}
+
+#first-place {
+    order: 2;
+    height: 180px;
+    background-color: #fbe567e6;
+    border-color: #fbe567e6;
+}
+
+#second-place {
+    order: 1;
+    height: 150px;
+    background-color: silver;
+    border-color: silver;
+}
+
+#third-place {
+    order: 3;
+    height: 120px;
+    background-color: #e09c57;
+    border-color: #e09c57;
+}
+
+.home-button {
+    background-color: #ffffff;
+    position: absolute;
+    box-shadow: 0 0px 0px rgba(0, 0, 0, 0.1);
+    top: 20px;
+    left: 20px;
+    color: black;
+    padding: 0; 
+    border: none;
+    background: none;
+    cursor: pointer;
+    width: auto; 
+    height: auto; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.home-button i {
+    margin: 0; 
+    font-size: 35px; 
+}
+
+.home-button:hover {
+    color: #1d1e1e;
+    background-color: #ffffff; 
+}
+
+.container {
+    position: relative; 
+}
+
+.drawing-area {
+    display: flex;
+    border-left: 2px solid #000;
+    margin-top: 10px;
+}
+
+.user-drawing-area,
+.ai-drawing-area {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    position: relative;
+    width: 400px;
+    height: 400px;
+}
+
+#drawCanvas,
+#aiCanvas {
+    border: 1px solid #ccc;
+}
+
+
+.ai-drawing-area {
+    border-left: 2px dashed #ccc;
+}
+
+#aiCanvas {
+    width: 400px;
+    height: 400px;
+    border-top-right-radius: 0.3rem;
+    border-bottom-right-radius: 0.3rem;
+}
+
+#ai_image {
+    width: 400px;
+    height: 400px;
+    border-top-right-radius: 0.3rem;
+    border-bottom-right-radius: 0.3rem;
+}
+
+#ai_image_hide {
+    width: 400px;
+    height: 400px;
+    background-color: #fff;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+}
+
+#prompt_div {
+    flex-direction: row;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#clear_button {
+    background-color: #fff;
+    padding: 0.6rem 1rem;
+    padding-bottom: 0.7rem;
+    border-radius: 0.3rem;
+    color: #f3f4f6;
+    font-size: 24px;
+    cursor: pointer;
+    color: black;
+    margin-bottom: 14px;
+    margin-right: 6rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
 }

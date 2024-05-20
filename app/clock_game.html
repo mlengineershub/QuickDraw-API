@@ -6,13 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Play Against the Clock</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
 </head>
 
 <body>
     <div class="container">
         <img src="images/clock.png" alt="Clock Logo" class="game-logo">
         <p id="countdown" class="countdown"></p>
-        <p id="randomPrompt" class="selection-area"></p>
+        <div id="prompt_div">
+            <p id="randomPrompt" class="selection-area"></p>
+            <button id="clear_button" onclick="clearCanvas()"><i class="fas fa-eraser"></i></button>
+        </div>
         <div class="drawing-area">
             <canvas id="drawCanvas" width="400" height="400" willReadFrequently="true"></canvas>
         </div>
@@ -20,8 +25,10 @@
             <p id="predictionText">Draw something to see predictions here.</p>
         </div>
         <div class="scoreboard">
-            <p id="currentRound">Round 1: Your score is 0</p>
-            <p id="previousScores"></p>
+            <div class="scoreboard-item">
+                <span id="currentRound">Round 1</span>
+                <p id="previousScores"></p>
+            </div>
         </div>
     </div>
     <script src="js/clock_game.js"></script>

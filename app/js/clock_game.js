@@ -13,8 +13,8 @@ const timeLimit = new URLSearchParams(window.location.search).get('difficulty') 
 let mean_time_player = 0;
 let score_player = 0;
 let start_time = 0;
-const player_name = new URLSearchParams(window.location.search).get('playerName');
-const difficulty = new URLSearchParams(window.location.search).get('difficulty');
+const player_name = new URLSearchParams(window.location.search).get('playerName').toLowerCase();
+const difficulty = new URLSearchParams(window.location.search).get('difficulty').toLowerCase();
 
 function getLabelsSync() {
     const request = new XMLHttpRequest();
@@ -32,9 +32,7 @@ function getLabelsSync() {
 const prompts = getLabelsSync();
 
 function selectRandomPrompt() {
-    console.log(prompts);
     const promptKeys = Object.keys(prompts);
-    console.log(promptKeys);
     const randomKey = promptKeys[Math.floor(Math.random() * promptKeys.length)];
     const randomPrompt = `${prompts[randomKey]} ${randomKey.charAt(0).toUpperCase() + randomKey.slice(1)}`;
     X = prompts[randomKey];
@@ -61,7 +59,10 @@ function initializeTimer(duration) {
 
 function finishRound() {
     const end_time = new Date().getTime();
-    const time_diff = end_time - start_time;
+    let time_diff = end_time - start_time;
+    if (time_diff > timeLimit * 1000) {
+        time_diff = timeLimit * 1000;
+    };
     mean_time_player = mean_time_player + time_diff;
     callPredictionAPI();
     const scoreForRound = document.getElementById('predictionText').innerText.includes(X) ? 1 : 0;
@@ -70,7 +71,8 @@ function finishRound() {
 
 function updateScore(newScore) {
     scores[currentRound - 1] = newScore;
-    document.getElementById('currentRound').innerText = `Round ${currentRound}: Your score is ${newScore}`;
+    let emoji = newScore == 1 ? "✅" : "❌";   
+    document.getElementById('currentRound').innerText = `Round ${currentRound}: ${emoji}`;
     document.getElementById('previousScores').innerText = `Total Score: ${scores.reduce((a, b) => a + b, 0)}`;
     if (currentRound < totalRounds) {
         currentRound++;
@@ -80,10 +82,16 @@ function updateScore(newScore) {
     }
 }
 
+function clearCanvas() {
+    ctx.fillStyle = 'white';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    callPredictionAPI();
+}
+
 function finishGame() {
     mean_time_player = mean_time_player / totalRounds;
     mean_time_player = mean_time_player / 1000;
-    window.location.href = `end_clock_game.html?player_name=${player_name}&score=${scores.reduce((a, b) => a + b, 0)}&mean_time=${mean_time_player}&difficulty=${difficulty}&totalRounds=${totalRounds}`;
+    window.location.href = `end_game.html?mode=clock&player_name=${player_name}&score=${scores.reduce((a, b) => a + b, 0)}&mean_time=${mean_time_player}&difficulty=${difficulty}&totalRounds=${totalRounds}`;
 }
 
 function resetGameForNextRound() {

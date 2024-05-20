@@ -19,29 +19,33 @@ canvas.width = 400;
 canvas.height = 400;
 let painting = false;
 let intervalId = null;
-let timerInterval = null; // Global timer interval
+let timerInterval = null;
 let currentRound = 1;
 let totalRounds = parseInt(new URLSearchParams(window.location.search).get('totalRounds'));
-let scores = new Array(totalRounds).fill(0); // Initialize scores array
+let scores = new Array(totalRounds).fill(0);
 let X = null;
+let promptText = "";
 const speed = new URLSearchParams(window.location.search).get('difficulty') === 'hard' ? 100 : 30;
 let mean_time_player = 0;
 let score_player = 0;
 let start_time = 0;
-const player_name = new URLSearchParams(window.location.search).get('playerName');
-const difficulty = new URLSearchParams(window.location.search).get('difficulty');
+const player_name = new URLSearchParams(window.location.search).get('playerName').toLowerCase();
+const difficulty = new URLSearchParams(window.location.search).get('difficulty').toLowerCase();
+
+const DIFFICULTY_DELAY = { "medium" : 20_000, "hard": 10_000 }
+
 
 function selectRandomPrompt() {
     const promptKeys = Object.keys(prompts);
     const randomKey = promptKeys[Math.floor(Math.random() * promptKeys.length)];
     const randomPrompt = `${prompts[randomKey]} ${randomKey.charAt(0).toUpperCase() + randomKey.slice(1)}`;
     X = prompts[randomKey];
+    promptText = randomKey;
     document.getElementById('randomPrompt').innerText = randomPrompt;
 }
 
 function initializeTimer() {
-    // in this function i want the timer to start at 0 and count up
-    clearInterval(timerInterval); // Clear existing timer
+    clearInterval(timerInterval);
     let timer = 0, minutes, seconds;
     start_time = new Date().getTime();
     const countdown = document.getElementById('countdown');
@@ -55,7 +59,55 @@ function initializeTimer() {
     }, 1000);
 }
 
+function setAIImage(name) {
+    document.getElementById("ai_image").src = "images/sketchs/" + name + ".png";
+}
+
+let isAIClockEnabled = Date.now();
+
+function initAIClock(delay) {
+
+    isAIClockEnabled = Date.now();
+    let isAIClockEnabled2 = Number(isAIClockEnabled);
+
+    const FPS = 30;
+    const start_time = Date.now();
+
+    let o = document.getElementById("ai_image_hide");
+    o.style.top = "0px";
+    o.style.height = "400px";
+
+    return new Promise(async (resolve, reject) => {
+
+        while (isAIClockEnabled === isAIClockEnabled2 && Date.now() - start_time < delay) {
+
+            const p = Math.min((Date.now() - start_time) / delay, 1.0);
+            
+            o.style.top = String(Math.floor(p * 400.0)) + "px";
+            o.style.height = String(400 - Math.floor(p * 400.0)) + "px";
+
+            await new Promise(r => setTimeout(r, Math.floor(1000 / FPS)));
+        }
+
+        o.style.top = "400px";
+        o.style.height = "0px";
+
+        if (isAIClockEnabled === isAIClockEnabled2)
+            finishRound();
+
+        o.style.top = "0px";
+        o.style.height = "400px";
+
+        resolve()
+    });
+}
+
+function stopAIClock() {
+    isAIClockEnabled = Date.now();
+}
+
 function finishRound() {
+    stopAIClock();
     const end_time = new Date().getTime();
     const time_diff = end_time - start_time;
     mean_time_player = mean_time_player + time_diff;
@@ -66,7 +118,8 @@ function finishRound() {
 
 function updateScore(newScore) {
     scores[currentRound - 1] = newScore;
-    document.getElementById('currentRound').innerText = `Round ${currentRound}: Your score is ${newScore}`;
+    let emoji = newScore == 1 ? "✅" : "❌";   
+    document.getElementById('currentRound').innerText = `Round ${currentRound}: ${emoji}`;
     document.getElementById('previousScores').innerText = `Total Score: ${scores.reduce((a, b) => a + b, 0)}`;
     if (currentRound < totalRounds) {
         currentRound++;
@@ -76,20 +129,33 @@ function updateScore(newScore) {
     }
 }
 
+function clearCanvas() {
+    ctx.fillStyle = 'white';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    callPredictionAPI();
+}
+
 function finishGame() {
     mean_time_player = mean_time_player / totalRounds;
     mean_time_player = mean_time_player / 1000;
-    window.location.href = `end_clock_game.html?player_name=${player_name}&score=${scores.reduce((a, b) => a + b, 0)}&mean_time=${mean_time_player}&difficulty=${difficulty}&totalRounds=${totalRounds}`;
+    window.location.href = `end_game.html?mode=ai&player_name=${player_name}&score=${scores.reduce((a, b) => a + b, 0)}&mean_time=${mean_time_player}&difficulty=${difficulty}&totalRounds=${totalRounds}`;
 }
 
 function resetGameForNextRound() {
     selectRandomPrompt();
+    setAIImage(promptText);
     initializeCanvas();
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     initializeTimer();
+    drawingStarted = false;
 }
 
 function startPosition(e) {
+    if (!drawingStarted) {
+        drawingStarted = true;
+        initAIClock(DIFFICULTY_DELAY[difficulty] || 20000);
+    }
+
     painting = true;
     draw(e);
     if (!intervalId) intervalId = setInterval(callPredictionAPI, 1500);
@@ -103,6 +169,7 @@ function finishedPosition() {
     callPredictionAPI();
 }
 
+drawingStarted = false;
 function draw(e) {
     if (!painting) return;
     ctx.lineWidth = 5;
