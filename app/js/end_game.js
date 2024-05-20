@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('data to be sent:');
     console.log(JSON.stringify(postData));
 
-    fetch('http://quickdraw-endpoints:8000/add_score', {
+    fetch('http://localhost:8000/add_score', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Error:', error);
         });
 
-    fetch(`http://quickdraw-endpoints:8000/scores?mode=${mode}&difficulty=${difficulty}`)
+    fetch(`http://localhost:8000/scores?mode=${mode}&difficulty=${difficulty}`)
         .then(response => response.json())
         .then(data => {
             console.log('Podium data:', data);
