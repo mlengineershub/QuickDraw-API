@@ -9,10 +9,24 @@ jobs:
   build_and_publish:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
       - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Create .env file from secrets
         run: |
-          docker login -u ilanaliouchouche -p ${{ secrets.QD_PAT }} ghcr.io
+          echo "HOST=${{ secrets.HOST }}" >> .env
+          echo "PORT_APP=${{ secrets.PORT_APP }}" >> .env
+          echo "PORT_ENDPOINT=${{ secrets.PORT_ENDPOINT }}" >> .env
+          echo "MODEL_CKPT=${{ secrets.MODEL_CKPT }}" >> .env
+          echo "SUPABASE_URL=${{ secrets.SUPABASE_URL }}" >> .env
+          echo "SUPABASE_KEY=${{ secrets.SUPABASE_KEY }}" >> .env
+
+      - name: Login to GitHub Container Registry
+        run: |
+          echo ${{ secrets.QD_PAT }} | docker login ghcr.io -u ilanaliouchouche --password-stdin
+
+      - name: Build and push Docker images
+        run: |
           docker build -t ghcr.io/mlengineershub/quickdraw:latest .
           docker build -t ghcr.io/mlengineershub/quickdraw-endpoints:latest -f endpoints/Dockerfile .
           docker push ghcr.io/mlengineershub/quickdraw:latest
