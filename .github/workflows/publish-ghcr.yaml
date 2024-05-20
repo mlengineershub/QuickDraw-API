@@ -12,7 +12,7 @@ jobs:
       - uses: actions/checkout@v3
       - name: Checkout repository
         run: |
-          docker login -u ilanaliouchouche -p ${{ secrets.GHCR_PAT }} ghcr.io
+          docker login -u ilanaliouchouche -p ${{ secrets.QD_PAT }} ghcr.io
           docker build -t ghcr.io/mlengineershub/quickdraw:latest .
           docker build -t ghcr.io/mlengineershub/quickdraw-endpoints:latest -f endpoints/Dockerfile .
           docker push ghcr.io/mlengineershub/quickdraw:latest
