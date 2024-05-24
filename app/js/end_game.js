@@ -28,23 +28,23 @@ document.addEventListener('DOMContentLoaded', () => {
         difficulty: difficulty
     };
 
-    // console.log('data to be sent:');
-    // console.log(JSON.stringify(postData));
+    console.log('data to be sent:');
+    console.log(JSON.stringify(postData));
 
-    // fetch('http://127.0.0.1:8000/add_score', {
-    //     method: 'POST',
-    //     headers: {
-    //         'Content-Type': 'application/json'
-    //     },
-    //     body: JSON.stringify(postData)
-    // })
-    //     .then(response => response.json())
-    //     .then(data => {
-    //         console.log('Success:', data);
-    //     })
-    //     .catch((error) => {
-    //         console.error('Error:', error);
-    //     });
+    fetch('http://localhost:8000/add_score', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(postData)
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
 
     // Get the podium from the server 
     fetch('http://localhost:8000/scores')
