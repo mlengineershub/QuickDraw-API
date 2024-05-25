@@ -1,6 +1,6 @@
-# Drawing Game
+# App Directory
 
-Welcome to the Drawing Game Application Repository! This project encompasses the development of an interactive drawing game with multiple game modes and a scoreboard to track player performance.
+The `app/` directory encompasses the development of an interactive drawing game with multiple game modes and a scoreboard to track player performance.
 
 ## Project Workflow
 
@@ -63,17 +63,3 @@ Welcome to the Drawing Game Application Repository! This project encompasses the
     - `clock_game.js`: Contains the script for the Clock game mode, handling the countdown timer and drawing validation.
     - `ai_game.js`: Contains the script for the AI game mode, managing the AI's drawing behavior and user interactions.
     - `end_game.js`: Manages the scoreboard and player performance display.
-
-## Contributing
-
-We welcome contributions to enhance the Drawing Game. To contribute:
-
-1. Fork the repository.
-2. Create a new branch (`git checkout -b feature-branch`).
-3. Commit your changes (`git commit -am 'Add new feature'`).
-4. Push to the branch (`git push origin feature-branch`).
-5. Create a new Pull Request.
-
-## Contact
-
-For any inquiries or feedback, please contact us.
