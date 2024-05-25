@@ -205,7 +205,6 @@ async def get_scores():
     data = _data[1]
     df = pd.DataFrame(data)
 
-    # Return the DataFrame as a dictionary without any filtering
     scores = df.to_dict(orient='records')
 
     return scores
