@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('data to be sent:');
     console.log(JSON.stringify(postData));
 
-    fetch('http://quickdraw-endpoints:8000/add_score', {
+    fetch('/api/add_score', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
     // Get the podium from the server 
-    fetch('http://quickdraw-endpoints:8000/scores')
+    fetch('http://api/scores')
         .then(response => response.json())
         .then(data => {
             console.log('All scores data:', data);
@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function displayPodium(scores) {
         const podiumContainer = document.getElementById('podium-container');
-        podiumContainer.innerHTML = ''; // Clear previous podium data
+        podiumContainer.innerHTML = '';
 
         scores.forEach((score, index) => {
             const podiumBlock = document.createElement('div');
