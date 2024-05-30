@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // Get game infos
     const params = new URLSearchParams(window.location.search);
     const score = params.get('score');
     const meanTime = params.get('mean_time');
@@ -9,17 +8,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const difficulty = params.get('difficulty').toLowerCase();
     const mode = params.get('mode').toLowerCase();
 
-    // Ensure the time is displayed in a user-friendly format (seconds with two decimal places)
     const formattedTime = parseFloat(meanTime).toFixed(2);
 
-    // Display the score and mean time
     document.getElementById('scoreValue').textContent = `${score}`;
     document.getElementById('timeValue').textContent = `${formattedTime} seconds`;
     document.getElementById('playerNameValue').textContent = `${player_name}`;
     document.getElementById('difficultyValue').textContent = `${difficulty}`;
     document.getElementById('totalRoundsValue').textContent = `${totalRounds}`;
 
-    // Send the score to the server
     const postData = {
         user: player_name,
         score: parseInt(score),
@@ -31,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('data to be sent:');
     console.log(JSON.stringify(postData));
 
-    fetch('/api/add_score', {
+    fetch('http://127.0.0.1:8000/add_score', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -46,29 +42,18 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Error:', error);
         });
 
-    // Get the podium from the server 
-    fetch('http://api/scores')
+    fetch(`http://127.0.0.1:8000/scores?mode=${mode}&difficulty=${difficulty}`)
         .then(response => response.json())
         .then(data => {
-            console.log('All scores data:', data);
-            // Sort the data by score (descending) and mean_time (ascending)
-            const sortedData = data.sort((a, b) => {
-                if (b.score === a.score) {
-                    return a.mean_time - b.mean_time;
-                }
-                return b.score - a.score;
-            });
-            // Take the top 3 scores
-            const top3 = sortedData.slice(0, 3);
-            displayPodium(top3);
+            console.log('Podium data:', data);
+            displayPodium(data);
         })
         .catch((error) => {
-            console.error('Error fetching scores data:', error);
+            console.error('Error fetching podium data:', error);
         });
 
     function displayPodium(scores) {
         const podiumContainer = document.getElementById('podium-container');
-        podiumContainer.innerHTML = '';
 
         scores.forEach((score, index) => {
             const podiumBlock = document.createElement('div');

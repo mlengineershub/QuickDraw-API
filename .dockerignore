@@ -1,5 +1,0 @@
-*.log
-*.md
-Dockerfile
-.dockerignore
-.git*

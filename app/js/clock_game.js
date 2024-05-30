@@ -4,10 +4,10 @@ canvas.width = 400;
 canvas.height = 400;
 let painting = false;
 let intervalId = null;
-let timerInterval = null;
+let timerInterval = null; // Global timer interval
 let currentRound = 1;
 let totalRounds = parseInt(new URLSearchParams(window.location.search).get('totalRounds'));
-let scores = new Array(totalRounds).fill(0);
+let scores = new Array(totalRounds).fill(0); // Initialize scores array
 let X = null;
 const timeLimit = new URLSearchParams(window.location.search).get('difficulty') === 'hard' ? 20 : 30;
 let mean_time_player = 0;
@@ -18,7 +18,7 @@ const difficulty = new URLSearchParams(window.location.search).get('difficulty')
 
 function getLabelsSync() {
     const request = new XMLHttpRequest();
-    request.open('GET', '/api/labels', false);
+    request.open('GET', 'http://127.0.0.1:8000/labels', false);
     request.send(null);
 
     if (request.status === 200) {
@@ -40,7 +40,7 @@ function selectRandomPrompt() {
 }
 
 function initializeTimer(duration) {
-    clearInterval(timerInterval);
+    clearInterval(timerInterval); // Clear existing timer
     let timer = duration, minutes, seconds;
     start_time = new Date().getTime();
     const countdown = document.getElementById('countdown');
@@ -154,7 +154,7 @@ function callPredictionAPI() {
     const imageBlob = extractImage();
     const formData = new FormData();
     formData.append('file', imageBlob);
-    fetch('/api/predict_with_file', {
+    fetch('http://127.0.0.1:8000/predict_with_file', {
         method: 'POST',
         body: formData
     })

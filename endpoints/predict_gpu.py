@@ -1,7 +1,7 @@
 # Imports for environment variables
 from io import BytesIO
 import os
-# from dotenv import load_dotenv
+from dotenv import load_dotenv
 
 # Imports for web API
 from fastapi import FastAPI, File, UploadFile
@@ -33,10 +33,10 @@ from utils.config import ScoreData
 
 
 # Load environment variables
-# ENV_FILE_PATH = (
-#     os.path.join(os.path.dirname(os.path.dirname(__file__)), ".env")
-# )
-# load_dotenv(dotenv_path=ENV_FILE_PATH)
+ENV_FILE_PATH = (
+    os.path.join(os.path.dirname(os.path.dirname(__file__)), ".env")
+)
+load_dotenv(dotenv_path=ENV_FILE_PATH)
 
 model_ckpt = os.getenv("MODEL_CKPT")
 host = os.getenv("HOST")
@@ -49,10 +49,10 @@ app = FastAPI()
 # Set up CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[f"http://{host}:{app_port}"],
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST"],
+    allow_headers=["*"]
 )
 
 model = AutoModelForImageClassification.from_pretrained(model_ckpt)
@@ -171,9 +171,10 @@ async def get_labels():
 
 
 @app.get("/scores")
-async def get_scores():
+async def get_scores(mode: str, difficulty: str):
     """
-    Function to return all scores from the database without any filters.
+    Function to return the top 3 scores from the database
+    filtered by the given mode and difficulty.
     It returns a dictionary with the scores.
 
     score1: {   user: user1,
@@ -204,8 +205,14 @@ async def get_scores():
 
     data = _data[1]
     df = pd.DataFrame(data)
+    df_filtered = df[(df['mode'] == mode) & (df['difficulty'] == difficulty)]
 
-    scores = df.to_dict(orient='records')
+    df_filtered = df_filtered.sort_values(by=['score', 'mean_time'],
+                                          ascending=[False, True])
+
+    df_top3 = df_filtered.head(3)
+
+    scores = df_top3.to_dict(orient='records')
 
     return scores
 

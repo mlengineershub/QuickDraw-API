@@ -1,6 +1,6 @@
 function getLabelsSync() {
     const request = new XMLHttpRequest();
-    request.open('GET', '/api/labels', false);
+    request.open('GET', 'http://127.0.0.1:8000/labels', false);
     request.send(null);
 
     if (request.status === 200) {
@@ -211,7 +211,7 @@ function callPredictionAPI() {
     const imageBlob = extractImage();
     const formData = new FormData();
     formData.append('file', imageBlob);
-    fetch('/api/predict_with_file', {
+    fetch('http://127.0.0.1:8000/predict_with_file', {
         method: 'POST',
         body: formData
     })
